@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H'MMM: A Journal of Technology and Culture</title>
+<meta name="description" content="H'MMM is a peer-reviewed online journal publishing scholarship and creative work that invents rather than merely analyzes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --black: #0a0a0a;
+  --cream: #f0ebe1;
+  --amber: #c8873a;
+  --amber-light: #e8a856;
+  --mid: #7a7a80;
+  --groove: #111116;
+  --border: rgba(200,135,58,0.12);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--cream);
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
+  overflow-x: hidden;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* subtle grain */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9000;
+  opacity: 0.5;
+}
+
+a { color: inherit; }
+a:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 2px; }
+img { display: block; max-width: 100%; }
+
+/* ── LAYOUT ── */
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  position: relative;
+}
+
+.hero-logo {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-logo-wrap {
+  position: relative;
+  display: inline-block;
+  width: min(480px, 85vw);
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.2s forwards;
+}
+
+.hero-logo-wrap::before,
+.hero-logo-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-logo-wrap::before {
+  background: radial-gradient(ellipse at 30% 50%, rgba(200, 135, 58, 0.15) 0%, transparent 60%);
+  animation: mistDrift1 8s ease-in-out infinite alternate;
+  filter: blur(30px);
+}
+
+.hero-logo-wrap::after {
+  background: radial-gradient(ellipse at 70% 50%, rgba(232, 168, 86, 0.12) 0%, transparent 55%);
+  animation: mistDrift2 10s ease-in-out infinite alternate;
+  filter: blur(40px);
+}
+
+@keyframes mistDrift1 {
+  0% { transform: translate(-10%, 5%) scale(1); opacity: 0.6; }
+  50% { transform: translate(5%, -8%) scale(1.1); opacity: 1; }
+  100% { transform: translate(10%, 3%) scale(0.95); opacity: 0.7; }
+}
+
+@keyframes mistDrift2 {
+  0% { transform: translate(8%, -5%) scale(1.05); opacity: 0.5; }
+  50% { transform: translate(-5%, 8%) scale(0.9); opacity: 0.9; }
+  100% { transform: translate(-10%, -3%) scale(1.1); opacity: 0.6; }
+}
+
+.hero-intro {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.4vw, 1.4rem);
+  line-height: 1.75;
+  color: var(--cream);
+  opacity: 0;
+  max-width: 580px;
+  animation: fadeUp 1s ease 0.5s forwards;
+}
+
+.hero-status {
+  margin-top: 2.5rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--mid);
+  opacity: 0;
+  animation: fadeUp 1s ease 0.8s forwards;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hero-status strong {
+  color: var(--amber);
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+.hero-status .editors-line {
+  font-size: 0.68rem;
+  color: var(--mid);
+}
+
+.hero-links {
+  margin-top: 2.5rem;
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeUp 1s ease 1s forwards;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.btn-primary {
+  background: var(--amber);
+  color: var(--black);
+  border: 2px solid var(--amber);
+}
+.btn-primary:hover {
+  background: var(--amber-light);
+  border-color: var(--amber-light);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--amber);
+  border: 2px solid rgba(200,135,58,0.35);
+}
+.btn-ghost:hover {
+  border-color: var(--amber);
+  background: rgba(200,135,58,0.07);
+}
+
+/* ── DIVIDER ── */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── ABOUT SECTION ── */
+.about {
+  padding: 6rem 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-label::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--amber);
+}
+
+.about p {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.25rem;
+  line-height: 1.85;
+  color: var(--cream);
+  opacity: 0.88;
+  margin-bottom: 1.5rem;
+}
+
+.about p:last-of-type {
+  margin-bottom: 0;
+}
+
+.about .pullquote {
+  font-style: italic;
+  border-left: 2px solid var(--amber);
+  padding-left: 1.5rem;
+  margin: 2.5rem 0;
+  opacity: 0.92;
+  font-size: 1.2rem;
+}
+
+/* ── EDITORS ── */
+.editors {
+  padding: 5rem 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.editor-row {
+  display: flex;
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+.editor {
+  flex: 1;
+}
+
+.editor-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.3rem;
+  color: var(--cream);
+  margin-bottom: 0.3rem;
+}
+
+.editor-affil {
+  font-size: 0.78rem;
+  color: var(--mid);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.6rem;
+}
+
+.editor-email a {
+  font-size: 0.82rem;
+  color: var(--amber);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(200,135,58,0.3);
+  padding-bottom: 1px;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.editor-email a:hover {
+  color: var(--amber-light);
+  border-color: var(--amber-light);
+}
+
+/* ── BOARD ── */
+.board {
+  padding: 5rem 2rem 6rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.board-list {
+  columns: 1;
+  margin-top: 2rem;
+  list-style: none;
+}
+
+.board-list li {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--cream);
+  opacity: 0.75;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  break-inside: avoid;
+}
+
+.board-list li .inst {
+  color: var(--mid);
+  font-size: 0.75rem;
+  display: inline;
+  margin-left: 0.3rem;
+}
+
+/* ── CONTACT / LINKS ── */
+.connect {
+  padding: 5rem 2rem 6rem;
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.connect-links {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.connect-link {
+  font-size: 0.78rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(200,135,58,0.3);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.connect-link:hover {
+  color: var(--amber-light);
+  border-color: var(--amber-light);
+}
+
+/* ── FOOTER ── */
+.site-footer {
+  padding: 3rem 2rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.footer-text {
+  font-size: 0.68rem;
+  color: var(--mid);
+  letter-spacing: 0.1em;
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .editor-row {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .hero {
+    padding: 3rem 1.5rem;
+  }
+  .about, .editors, .board, .connect {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-logo-wrap">
+    <img src="square_bigger.png" alt="H'MMM: A Journal of Technology and Culture" class="hero-logo">
+  </div>
+
+  <p class="hero-intro">
+    A new, peer-reviewed online journal publishing scholarship and creative work that invents rather than merely analyzes.
+  </p>
+
+  <div class="hero-status">
+    <strong>Launching January 2027</strong>
+    <span class="editors-line">Editors: S. Andrew Stowe &amp; Sergio C. Figueiredo</span>
+  </div>
+
+  <div class="hero-links">
+    <a href="https://drive.google.com/file/d/1rrfmoF2jsEq9FW0tFNwxsg5_4T8H3l1L/view?usp=sharing" target="_blank" rel="noopener" class="btn btn-primary">Read the Vision Statement</a>
+    <a href="https://www.instagram.com/hmmmjournal" target="_blank" rel="noopener" class="btn btn-ghost">Follow @hmmmjournal</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ ABOUT ═══ -->
+<section class="about reveal">
+  <div class="section-label">About the Journal</div>
+
+  <p>
+    Born from the electrate tradition associated with Gregory Ulmer, but not bound by it, H'MMM publishes work across the humanities, music and sound, movies and image, and media and genre.
+  </p>
+
+  <p class="pullquote">
+    If your work feels too strange for traditional journals, too playful for conventional theory, or too thoughtful for platforms optimized for engagement metrics, H'MMM is likely its home.
+  </p>
+
+  <p>
+    We welcome essays, media artifacts, multimodal compositions, visual and sonic projects, interactive works, and hybrid formats. We welcome serious works, unserious works, and works that refuse to decide which they are.
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ FOUNDING EDITORS ═══ -->
+<section class="editors reveal">
+  <div class="section-label">Founding Editors</div>
+
+  <div class="editor-row">
+    <div class="editor">
+      <div class="editor-name">S. Andrew Stowe</div>
+      <div class="editor-affil">Anderson University</div>
+      <div class="editor-email"><a href="mailto:sstowe@andersonuniversity.edu">sstowe@andersonuniversity.edu</a></div>
+    </div>
+    <div class="editor">
+      <div class="editor-name">Sergio C. Figueiredo</div>
+      <div class="editor-affil">Kennesaw State University</div>
+      <div class="editor-email"><a href="mailto:sfigueir@kennesaw.edu">sfigueir@kennesaw.edu</a></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ EDITORIAL BOARD ═══ -->
+<section class="board reveal">
+  <div class="section-label">Editorial Board</div>
+
+  <ul class="board-list">
+    <li>Whitney Jordan Adams <span class="inst">Berry College</span></li>
+    <li>Joshua Abboud <span class="inst">University of Kentucky</span></li>
+    <li>Sarah Arroyo <span class="inst">California State University, Long Beach</span></li>
+    <li>Erin Bahl <span class="inst">Kennesaw State University</span></li>
+    <li>Regina Bradley <span class="inst">Kennesaw State University</span></li>
+    <li>Shannon Butts <span class="inst">University of Florida</span></li>
+    <li>Geoffrey Carter <span class="inst">Saginaw Valley State University</span></li>
+    <li>Data Tolentino-Canlas <span class="inst">University of the Philippines Diliman</span></li>
+    <li>Jason Crider <span class="inst">Texas A&amp;M University</span></li>
+    <li>Eric Detweiler <span class="inst">Middle Tennessee State University</span></li>
+    <li>Douglas Eyman <span class="inst">George Mason University</span></li>
+    <li>Daniel Frank <span class="inst">University of California, Santa Barbara</span></li>
+    <li>Jacob Greene <span class="inst">Arizona State University</span></li>
+    <li>Leigh Gruwell <span class="inst">Auburn University</span></li>
+    <li>Joshua Herron <span class="inst">Anderson University</span></li>
+    <li>Steve Holmes <span class="inst">Texas Tech University</span></li>
+    <li>Victoria Houser <span class="inst">University of California, Santa Barbara</span></li>
+    <li>Madison Jones <span class="inst">University of Rhode Island</span></li>
+    <li>Bonnie Lenore Kyburz <span class="inst">Northern Illinois University</span></li>
+    <li>Victoria Lagrange <span class="inst">Kennesaw State University</span></li>
+    <li>Daniel Liddle <span class="inst">Western Kentucky University</span></li>
+    <li>Barry Mauer <span class="inst">University of Central Florida</span></li>
+    <li>Sean Morey <span class="inst">University of Tennessee, Knoxville</span></li>
+    <li>April O'Brien <span class="inst">Sam Houston State University</span></li>
+    <li>Heather Palmer <span class="inst">University of Tennessee at Chattanooga</span></li>
+    <li>Mari Ramler <span class="inst">Tennessee Tech University</span></li>
+    <li>Craig Saper <span class="inst">University of Maryland, Baltimore County</span></li>
+    <li>James Sanchez <span class="inst">Middlebury College</span></li>
+    <li>Richard Smyth <span class="inst">Retired / Independent Scholar</span></li>
+    <li>Scott Sundvall <span class="inst">University of Memphis</span></li>
+    <li>David Williams <span class="inst">University of South Carolina</span></li>
+    <li>Josh Wood <span class="inst">Syracuse University</span></li>
+    <li>Lauren Woolbright <span class="inst">Flinders University</span></li>
+  </ul>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ CONNECT ═══ -->
+<section class="connect reveal">
+  <div class="section-label" style="justify-content: center;">Get in Touch</div>
+
+  <div class="connect-links">
+    <a href="mailto:hmmm.journal@gmail.com" class="connect-link">hmmm.journal@gmail.com</a>
+    <a href="https://www.instagram.com/hmmmjournal" target="_blank" rel="noopener" class="connect-link">Instagram</a>
+    <a href="https://www.hmmm-journal.org" class="connect-link">hmmm-journal.org</a>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer">
+  <p class="footer-text">&copy; 2026 H'MMM: A Journal of Technology and Culture</p>
+</footer>
+
+<!-- ═══ SCROLL REVEAL ═══ -->
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (en.isIntersecting) {
+      en.target.classList.add('visible');
+      obs.unobserve(en.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
